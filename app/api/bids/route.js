@@ -5,6 +5,43 @@ import { connectMongoDB } from '../../../lib/ConnectDb';
 import { verifyToken } from '../../../lib/jwt';
 
 // Handle POST requests to submit a new bid
+// export async function POST(req) {
+//     try {
+//         await connectMongoDB();
+
+//         const { projectId, amount, description } = await req.json();
+//         const token = req.headers.get("Authorization")?.split(" ")[1];
+//         const decoded = await verifyToken(token);
+
+//         if (!decoded || !decoded.id) {
+//             return new Response(JSON.stringify({ message: "Unauthorized" }), { status: 401 });
+//         }
+
+//         // Fetch the project to get clientId and clientName
+//         const project = await Project.findById(projectId).lean();
+//         if (!project) {
+//             return new Response(JSON.stringify({ message: "Project not found" }), { status: 404 });
+//         }
+
+//         const newBid = new Bid({
+//             projectId: new mongoose.Types.ObjectId(projectId),
+//             freelancerId: new mongoose.Types.ObjectId(decoded.id),
+//             clientId: project.clientId, // Set clientId from the project
+//             clientName: project.clientName || "Unknown", // Set clientName from the project or default to "Unknown"
+//             amount,
+//             description,
+//             freelancerName: verified.name // Assuming clientName should come from the verified token
+//         });
+
+//         await newBid.save();
+//         return new Response(JSON.stringify(newBid), { status: 201 });
+//     } catch (error) {
+//         console.error('Error submitting bid:', error);
+//         return new Response(JSON.stringify({ message: "Internal Server Error" }), { status: 500 });
+//     }
+// }
+
+
 export async function POST(req) {
     try {
         await connectMongoDB();
@@ -30,6 +67,7 @@ export async function POST(req) {
             clientName: project.clientName || "Unknown", // Set clientName from the project or default to "Unknown"
             amount,
             description,
+            freelancerName: decoded.name || "Anonymous" // Set freelancerName from the decoded token or default to "Anonymous"
         });
 
         await newBid.save();
@@ -39,6 +77,7 @@ export async function POST(req) {
         return new Response(JSON.stringify({ message: "Internal Server Error" }), { status: 500 });
     }
 }
+
 
 
 // Handle GET requests to fetch projects and mark bids submitted by the freelancer

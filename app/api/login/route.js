@@ -27,7 +27,7 @@ export async function POST(req) {
     }
 
     // Generate JWT token including user ID and role
-    const token = generateToken({ _id: user._id, email: user.email, role: user.userType });
+    const token = generateToken({ _id: user._id, email: user.email, role: user.userType ,name: user.name  });
 
     // Return token and user type
     return NextResponse.json({ message: "Login successful", token, userType: user.userType ,userId:user._id,name:user.name });

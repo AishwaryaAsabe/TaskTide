@@ -12,6 +12,9 @@ const bidSchema = new mongoose.Schema({
         ref: 'User',
         required: true,
     },
+
+    freelancerName: { type: String, required: true },  // Freelancer's name
+
     clientId: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User', 

@@ -45,7 +45,6 @@ import User from '@/models/User';
 
 
 // models/project.js
-
 export async function POST(req) {
     await connectMongoDB();
     const token = req.headers.get('Authorization')?.split(' ')[1];
@@ -65,14 +64,15 @@ export async function POST(req) {
         // Calculate the bidding deadline as 48 hours plus the entered days from the current time
         const biddingDuration = parseInt(projectData.biddingDuration, 10);
         const now = new Date();
-        const biddingDeadline = new Date(now.getTime() + (biddingDuration * 24 * 60 * 60 * 1000) + ( 60 * 60 * 1000)); // days + 48 hours
+        const biddingDeadline = new Date(now.getTime() + (biddingDuration * 24 * 60 * 60 * 1000) + (60 * 60 * 1000)); // days + 48 hours
 
         const project = new Project({
             title: projectData.title,
             description: projectData.description,
             budget: projectData.budget,
             biddingDeadline,
-            clientId: verified.id
+            clientId: verified.id,
+            clientName: verified.name // Assuming clientName should come from the verified token
         });
 
         await project.save();
@@ -82,6 +82,7 @@ export async function POST(req) {
         return new Response(JSON.stringify({ message: error.message || 'Internal Server Error' }), { status: 500 });
     }
 }
+
 
 
 

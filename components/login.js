@@ -76,6 +76,16 @@ const LoginComponent = () => {
             Sign in
           </button>
         </form>
+
+
+        {/* Link to reset password page */}
+      <p className="mt-6 text-center text-sm text-gray-600">
+        Forgot your password?{' '}
+        <Link href="/ResetPasswordRequest">
+          <span className="font-medium text-teal-600 hover:text-teal-500">Reset it here</span>
+        </Link>
+      </p>
+
         <p className="mt-6 text-center text-sm text-gray-600">
           Don't have an account?{' '}
           <Link href="/register">
