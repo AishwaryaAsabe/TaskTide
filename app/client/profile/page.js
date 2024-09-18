@@ -256,13 +256,17 @@ export default function ClientProfile() {
       // Now update the profile with form data and the new image URL
       await axios.post("/api/profile", {
         userId,
-        clientInfo: formData,
+        clientInfo: {
+          ...formData, // Include freelancerInfo fields
+          bio: formData.bio || "" // Ensure bio is included here
+        },
         profileImage: uploadedImageUrl, // Use the uploaded image URL or the existing one
       });
   
       setProfile((prev) => ({
         ...prev,
         clientInfo: formData,
+        bio: formData.bio || "", // Ensure bio is updated in the profile
         profileImage: uploadedImageUrl,
       }));
       
@@ -357,6 +361,21 @@ export default function ClientProfile() {
               type="text"
               name="company"
               value={formData.company || ""}
+              onChange={handleChange}
+              disabled={!editable}
+              className={`mt-1 block w-full px-4 py-2 border ${
+                editable ? "border-blue-500" : "border-gray-300"
+              } rounded-md`}
+            />
+          </div>
+
+
+          <div className="mb-4">
+            <label className="block text-gray-700">Bio</label>
+            <input
+              type="text"
+              name="bio"
+              value={formData.bio || ""}
               onChange={handleChange}
               disabled={!editable}
               className={`mt-1 block w-full px-4 py-2 border ${

@@ -42,10 +42,12 @@ const userSchema = new mongoose.Schema({
   freelancerInfo: {
     skills: [String],
     hourlyRate: Number,
-    bio: String,
+  
     // Add other fields as needed
   },
-  profileImage: String // Optional: for storing profile image URL
+  profileImage: String, // Optional: for storing profile image URL
+  bio: { type: String, required: true },
+
 
 }, {
   timestamps: true

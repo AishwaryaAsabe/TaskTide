@@ -244,6 +244,9 @@ export default function FreelancerProfile() {
     setImage(e.target.files[0]); // Set the image file
   };
 
+  
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const userId = localStorage.getItem("userId");
@@ -271,16 +274,20 @@ export default function FreelancerProfile() {
       // Now update the profile with form data and the new image URL
       await axios.post("/api/profile", {
         userId,
-        freelancerInfo: formData,
+        freelancerInfo: {
+          ...formData, // Include freelancerInfo fields
+          bio: formData.bio || "" // Ensure bio is included here
+        },
         profileImage: uploadedImageUrl, // Use the uploaded image URL or the existing one
       });
   
       setProfile((prev) => ({
         ...prev,
         freelancerInfo: formData,
+        bio: formData.bio || "", // Ensure bio is updated in the profile
         profileImage: uploadedImageUrl,
       }));
-      
+  
       // Reset the form after success
       setFormData(formData);
       setEditable(false);
@@ -290,6 +297,10 @@ export default function FreelancerProfile() {
       toast.error("Failed to update profile");
     }
   };
+  
+
+
+ 
   
 
   const handleCancel = () => {
@@ -350,6 +361,23 @@ export default function FreelancerProfile() {
               type="text"
               name="skills"
               value={formData.skills || ""}
+              onChange={handleChange}
+              disabled={!editable}
+              className={`mt-1 block w-full px-4 py-2 border ${
+                editable ? "border-blue-500" : "border-gray-300"
+              } rounded-md`}
+            />
+          </div>
+
+
+
+          
+          <div className="mb-4">
+            <label className="block text-gray-700">Bio</label>
+            <input
+              type="text"
+              name="bio"
+              value={formData.bio || ""}
               onChange={handleChange}
               disabled={!editable}
               className={`mt-1 block w-full px-4 py-2 border ${

@@ -62,30 +62,108 @@ export async function GET(req) {
 
 
 
+// export async function POST(req) {
+//   await connectMongoDB();
+  
+//   const { userId, clientInfo, freelancerInfo, profileImage ,bio} = await req.json(); // Expect profileImage
+
+//   if (!userId) {
+//     return new Response(JSON.stringify({ error: 'User ID is required' }), { status: 400 });
+//   }
+
+//   try {
+//     const updateData = {};
+
+//     if (clientInfo) updateData.clientInfo = clientInfo;
+//     if (freelancerInfo) updateData.freelancerInfo = freelancerInfo;
+//     if (profileImage) updateData.profileImage = profileImage; // Save the image URL
+//     if (bio) updateData.bio = bio; // Save the image URL
+
+
+//     const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true });
+
+//     if (!updatedUser) {
+//       return new Response(JSON.stringify({ error: 'User not found' }), { status: 404 });
+//     }
+
+//     return new Response(JSON.stringify(updatedUser), { status: 200 });
+//   } catch (error) {
+//     return new Response(JSON.stringify({ error: 'Error updating profile' }), { status: 500 });
+//   }
+// }
+
+
+// export async function POST(req) {
+//   await connectMongoDB();
+  
+//   const { userId, clientInfo, freelancerInfo, profileImage, bio } = await req.json(); // Expect profileImage
+
+//   if (!userId) {
+//     return new Response(JSON.stringify({ error: 'User ID is required' }), { status: 400 });
+//   }
+
+//   try {
+//     const user = await User.findById(userId); // Find the user by ID
+
+//     if (!user) {
+//       return new Response(JSON.stringify({ error: 'User not found' }), { status: 404 });
+//     }
+
+//     const updateData = {};
+
+//     // Update based on user type (client or freelancer)
+//     if (user.userType === 'client' && clientInfo) {
+//       updateData.clientInfo = clientInfo;
+//     } else if (user.userType === 'freelancer' && freelancerInfo) {
+//       updateData.freelancerInfo = freelancerInfo;
+//     }
+
+//     if (profileImage) updateData.profileImage = profileImage; // Update profile image
+//     if (bio) updateData.bio = bio; // Update bio
+
+//     const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true });
+
+//     return new Response(JSON.stringify(updatedUser), { status: 200 });
+//   } catch (error) {
+//     return new Response(JSON.stringify({ error: 'Error updating profile' }), { status: 500 });
+//   }
+// }
+
+
+
 export async function POST(req) {
   await connectMongoDB();
   
-  const { userId, clientInfo, freelancerInfo, profileImage } = await req.json(); // Expect profileImage
+  const { userId, clientInfo, freelancerInfo, profileImage, bio } = await req.json(); // Expect profileImage
 
   if (!userId) {
     return new Response(JSON.stringify({ error: 'User ID is required' }), { status: 400 });
   }
 
   try {
-    const updateData = {};
+    const user = await User.findById(userId); // Find the user by ID
 
-    if (clientInfo) updateData.clientInfo = clientInfo;
-    if (freelancerInfo) updateData.freelancerInfo = freelancerInfo;
-    if (profileImage) updateData.profileImage = profileImage; // Save the image URL
-
-    const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true });
-
-    if (!updatedUser) {
+    if (!user) {
       return new Response(JSON.stringify({ error: 'User not found' }), { status: 404 });
     }
+
+    const updateData = {};
+
+    // Update based on user type (client or freelancer)
+    if (user.userType === 'client' && clientInfo) {
+      updateData.clientInfo = clientInfo;
+    } else if (user.userType === 'freelancer' && freelancerInfo) {
+      updateData.freelancerInfo = freelancerInfo;
+    }
+
+    if (profileImage) updateData.profileImage = profileImage; // Update profile image
+    if (bio) updateData.bio = bio; // Update bio
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true });
 
     return new Response(JSON.stringify(updatedUser), { status: 200 });
   } catch (error) {
     return new Response(JSON.stringify({ error: 'Error updating profile' }), { status: 500 });
   }
 }
+
