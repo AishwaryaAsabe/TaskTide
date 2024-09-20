@@ -37,11 +37,31 @@ const userSchema = new mongoose.Schema({
     address: String,
     phone: String,
     company: String,
+    companylink: {
+      type: String, // Field to store the portfolio link
+      validate: {
+        validator: function(v) {
+          // Simple URL validation
+          return /^(http|https):\/\/[^ "]+$/.test(v);
+        },
+        message: props => `${props.value} is not a valid URL!`
+      }
+    },
     // Add other fields as needed
   },
   freelancerInfo: {
     skills: [String],
     hourlyRate: Number,
+    portfolio: {
+      type: String, // Field to store the portfolio link
+      validate: {
+        validator: function(v) {
+          // Simple URL validation
+          return /^(http|https):\/\/[^ "]+$/.test(v);
+        },
+        message: props => `${props.value} is not a valid URL!`
+      }
+    },
   
     // Add other fields as needed
   },

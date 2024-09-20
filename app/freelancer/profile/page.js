@@ -283,6 +283,7 @@ export default function FreelancerProfile() {
          // Ensure bio is included here
         },
         bio: formData.bio || "" ,
+        
         profileImage: uploadedImageUrl, // Use the uploaded image URL or the existing one
       });
   
@@ -373,6 +374,25 @@ export default function FreelancerProfile() {
               } rounded-md`}
             />
           </div>
+
+
+
+
+
+          <div className="mb-4">
+          <label className="block text-gray-700">Portfolio Link</label>
+          <input
+            type="url"
+            name="portfolio"
+            value={formData.portfolio || ""}
+            onChange={handleChange}
+            disabled={!editable}
+            className={`mt-1 block w-full px-4 py-2 border ${
+              editable ? "border-blue-500" : "border-gray-300"
+            } rounded-md`}
+            placeholder="https://example.com/portfolio" // Optional placeholder
+          />
+        </div>
 
 
 

@@ -374,6 +374,22 @@ export default function ClientProfile() {
             />
           </div>
 
+          
+          <div className="mb-4">
+          <label className="block text-gray-700">Company Website</label>
+          <input
+            type="url"
+            name="companylink"
+            value={formData.companylink || ""}
+            onChange={handleChange}
+            disabled={!editable}
+            className={`mt-1 block w-full px-4 py-2 border ${
+              editable ? "border-blue-500" : "border-gray-300"
+            } rounded-md`}
+            placeholder="https://example.com/" // Optional placeholder
+          />
+        </div>
+
 
           <div className="mb-4">
             <label className="block text-gray-700">Bio</label>

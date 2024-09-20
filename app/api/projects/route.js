@@ -108,13 +108,24 @@ export async function GET(req) {
             : await Project.find({ clientId: decoded.id }); // Clients see only their projects
 
         // Fetch the bids and populate the freelancer details
+        // const projectsWithBids = await Promise.all(projects.map(async (project) => {
+        //     const bids = await Bid.find({ projectId: project._id }).populate('freelancerId', 'name', 'skills');
+        //     return {
+        //         ...project.toObject(),
+        //         bids
+        //     };
+        // }));
+
         const projectsWithBids = await Promise.all(projects.map(async (project) => {
-            const bids = await Bid.find({ projectId: project._id }).populate('freelancerId', 'name');
+            const bids = await Bid.find({ projectId: project._id })
+                .populate('freelancerId', 'name freelancerInfo.skills'); // Include freelancerInfo.skills
+        
             return {
                 ...project.toObject(),
                 bids
             };
         }));
+        
 
         return new Response(JSON.stringify(projectsWithBids), { status: 200 });
     } catch (error) {

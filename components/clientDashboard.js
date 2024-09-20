@@ -13,6 +13,9 @@ export default function ClientDashboard() {
     const [error, setError] = useState(null);
     const [clientId, setClientId] = useState(null);
     const [timer, setTimer] = useState(Date.now()); // Timer state for triggering re-renders
+    const [searchQuery, setSearchQuery] = useState(''); // State for search query
+    const [filteredFreelancers, setFilteredFreelancers] = useState([]); // State for filtered freelancers
+
 
     useEffect(() => {
         const userId = localStorage.getItem('userId');
@@ -101,6 +104,31 @@ export default function ClientDashboard() {
         return `${days}d ${hours}h ${minutes}m ${seconds}s`;
     };
 
+
+
+
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+    };
+
+    const filteredProjects = () => {
+        if (!searchQuery) return projects; // Return all projects if no search query
+
+        return projects.filter(project => {
+            // Check if any bids have freelancers with skills matching the search query
+            return project.bids.some(bid => 
+                bid.freelancerId && 
+                bid.freelancerId.freelancerInfo && // Ensure freelancerInfo exists
+                Array.isArray(bid.freelancerId.freelancerInfo.skills) && // Check if skills is an array
+                bid.freelancerId.freelancerInfo.skills.some(skill =>
+                    skill.toLowerCase().includes(searchQuery.toLowerCase())
+                )
+            );
+        });
+        
+    };
+
+
     return (
         <div className="min-h-screen bg-gray-900 py-8 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
@@ -113,6 +141,20 @@ export default function ClientDashboard() {
                         Manage your projects and bids with ease.
                     </p>
                 </div>
+
+
+
+                  {/* Search Bar */}
+                  <div className="mb-6">
+                    <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        placeholder="Search by skills..."
+                        className="block w-full rounded-md border-gray-600 bg-gray-900 text-white shadow-sm focus:ring-teal-500 focus:border-teal-500 sm:text-sm p-2"
+                    />
+                </div>
+
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {/* Post New Project */}
@@ -186,7 +228,7 @@ export default function ClientDashboard() {
                     </div>
 
                     {/* Your Projects */}
-                    <div className="bg-gray-800 shadow-md rounded-lg p-6 border border-gray-600">
+                    {/* <div className="bg-gray-800 shadow-md rounded-lg p-6 border border-gray-600">
                         <h2 className="text-2xl font-semibold text-teal-400 mb-6">
                             Your Projects
                         </h2>
@@ -280,7 +322,56 @@ projects.map((project) => (
                                 <p className="text-gray-500 text-center">No projects found</p>
                             )}
                         </div>
+                    </div> */}
+
+<div className="bg-gray-800 shadow-md rounded-lg p-6 border border-gray-600">
+                        <h2 className="text-2xl font-semibold text-teal-400 mb-6">Your Projects</h2>
+                        <div className="mt-6 max-h-96 overflow-y-auto space-y-6 scrollbar-hide">
+                            {loading ? (
+                                <p className="text-center text-gray-500">Loading...</p>
+                            ) : filteredProjects().length > 0 ? (
+                                filteredProjects().map((project) => (
+                                    <div key={project._id} className="border border-gray-700 rounded-lg mb-6 p-4">
+                                        <h3 className="text-lg font-medium text-teal-300">{project.title}</h3>
+                                        <p className="mt-1 text-sm text-gray-400">{project.description}</p>
+                                        <p className="mt-2 text-sm text-gray-400 font-medium">Budget: ${project.budget}</p>
+                                        <p className="mt-2 text-sm text-gray-400 font-medium">Bidding Deadline: {formatTimeLeft(project.biddingDeadline)}</p>
+                                        <div className="mt-4">
+                                            <h4 className="text-md font-semibold text-teal-200">Bids</h4>
+                                            {project.bids.length > 0 ? (
+                                                project.bids.map(bid => (
+                                                    <div key={bid._id} className="mt-2 p-3 bg-gray-700 rounded-lg shadow-inner border border-gray-600">
+                                                        <p className="text-sm font-medium text-teal-400">
+                                                            Freelancer: {bid.freelancerId ? bid.freelancerId.name : 'Unknown'}
+                                                        </p>
+                                                        <p className="text-sm text-gray-300">Amount: ${bid.amount}</p>
+                                                        <p className="text-sm text-gray-300">Description: {bid.description}</p>
+                                                        <p className="text-sm text-gray-300">
+    Skills: {bid.freelancerId.freelancerInfo.skills ? bid.freelancerId.freelancerInfo.skills.join(', ') : 'No skills listed'}
+</p>                                                        {!project.acceptedBid ? (
+                                                            <button
+                                                                onClick={() => acceptBid(project._id, bid._id)}
+                                                                className="mt-2 text-sm text-teal-400 hover:text-teal-300"
+                                                            >
+                                                                Accept Bid
+                                                            </button>
+                                                        ) : project.acceptedBid === bid._id ? (
+                                                            <p className="text-green-400 mt-2">Bid Accepted</p>
+                                                        ) : null}
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <p className="text-gray-500">No bids submitted yet.</p>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <p className="text-gray-500 text-center">No matching projects found.</p>
+                            )}
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>
