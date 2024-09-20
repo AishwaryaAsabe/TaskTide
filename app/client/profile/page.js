@@ -258,8 +258,9 @@ export default function ClientProfile() {
         userId,
         clientInfo: {
           ...formData, // Include freelancerInfo fields
-          bio: formData.bio || "" // Ensure bio is included here
+        // Ensure bio is included here
         },
+        bio: formData.bio || "" ,
         profileImage: uploadedImageUrl, // Use the uploaded image URL or the existing one
       });
   
