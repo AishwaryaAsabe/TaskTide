@@ -224,7 +224,11 @@ export default function ClientProfile() {
 
   const handleCancel = () => {
     setEditable(false);
-    setFormData(profile.clientInfo || {});
+    // setFormData(profile.clientInfo || {});
+    setFormData({
+      ...response.data.freelancerInfo, // Freelancer info fields
+      bio: response.data.bio || "",    // Fetch bio field separately
+    });
     setImage(null); // Reset the image file on cancel
     setIsFormDirty(false); // Reset dirty state
   };
