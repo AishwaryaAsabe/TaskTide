@@ -215,7 +215,11 @@ export default function FreelancerProfile() {
       try {
         const response = await axios.get(`/api/profile?userId=${userId}`);
         setProfile(response.data);
-        setFormData(response.data.freelancerInfo || {});
+        // setFormData(response.data.freelancerInfo || {});
+        setFormData({
+          ...response.data.freelancerInfo, // Freelancer info fields
+          bio: response.data.bio || "",    // Fetch bio field separately
+        });
         setImageUrl(response.data.profileImage || ""); // Set image URL
 
         setLoading(false);
@@ -233,7 +237,7 @@ export default function FreelancerProfile() {
     setIsFormDirty(
       JSON.stringify(formData) !== JSON.stringify(profile.freelancerInfo)
     );
-  }, [formData, profile.freelancerInfo]);
+  }, [formData, profile.freelancerInfo ]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
