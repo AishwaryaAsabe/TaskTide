@@ -66,7 +66,7 @@ const userSchema = new mongoose.Schema({
     // Add other fields as needed
   },
   profileImage: String, // Optional: for storing profile image URL
-  bio: { type: String, required: true },
+bio: String,
 
 
 }, {
